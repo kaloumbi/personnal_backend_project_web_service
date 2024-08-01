@@ -136,7 +136,7 @@ class Datalayer
             $result->execute();
 
             if ($data = $result->fetch(PDO::FETCH_OBJ)) {
-                return (int) $data->id +1;
+                return (int) $data->id + 1;
             }
 
             return null;
@@ -165,7 +165,7 @@ class Datalayer
                 )
             );
 
-            
+
             if ($data) {
                 return true;
             } else {
@@ -185,11 +185,12 @@ class Datalayer
 
     /**
      * ====================== READ FONCTIONS ===========================
-    */
+     */
 
     //recuperer les donnees depuis la BD puis les stocker champs par champs dans un tabbleau et renvoi le tableau
-    function getAllUsers() {
-        
+    function getAllUsers()
+    {
+
         $sql = "SELECT * FROM `library_ws_db`.`users` ";
 
         try {
@@ -211,19 +212,20 @@ class Datalayer
 
             if ($users) {
                 return $users;
-            }else{
+            } else {
                 return false;
             }
 
-            
+
         } catch (\PDOException $ex) {
             echo $ex->getMessage();
-            return null ;
+            return null;
         }
     }
 
-    function getAllLivres() {
-        
+    function getAllLivres()
+    {
+
         $sql = "SELECT * FROM `library_ws_db`.`livre` ";
 
         try {
@@ -233,7 +235,7 @@ class Datalayer
 
             $livres = [];
             while ($data = $result->fetch(PDO::FETCH_OBJ)) {
-                $livre= new Livre();
+                $livre = new Livre();
                 $livre->setId($data->id);
                 $livre->setTitre($data->titre);
                 $livre->setAutheur($data->autheur);
@@ -249,19 +251,20 @@ class Datalayer
 
             if ($livres) {
                 return $livres;
-            }else{
+            } else {
                 return false;
             }
 
-            
+
         } catch (\PDOException $ex) {
             echo $ex->getMessage();
-            return null ;
+            return null;
         }
     }
 
-    function getAllEmprunts() {
-        
+    function getAllEmprunts()
+    {
+
         $sql = "SELECT * FROM `library_ws_db`.`emprunt` ";
 
         try {
@@ -271,7 +274,7 @@ class Datalayer
 
             $emprunts = [];
             while ($data = $result->fetch(PDO::FETCH_OBJ)) {
-                $emprunt= new Emprunt();
+                $emprunt = new Emprunt();
                 $emprunt->setId($data->id);
 
                 //convertir la chaine caractère en objet DateTime
@@ -280,30 +283,31 @@ class Datalayer
 
                 $emprunt->setDateEmprunt($dateEmprunt);
                 $emprunt->setDateRetour($dateRetour);
-                
+
                 $emprunt->setUserId($data->user_id);
                 $emprunt->setLivreId($data->livre_id);
 
-                
+
 
                 $emprunts[] = $emprunt;
             }
 
             if ($emprunts) {
                 return $emprunts;
-            }else{
+            } else {
                 return false;
             }
 
-            
+
         } catch (\PDOException $ex) {
             echo $ex->getMessage();
-            return null ;
+            return null;
         }
     }
 
-    function getAllHistoriques() {
-        
+    function getAllHistoriques()
+    {
+
         $sql = "SELECT * FROM `library_ws_db`.`historique` ";
 
         try {
@@ -322,71 +326,344 @@ class Datalayer
 
                 $historique->setDateEmprunt($dateEmprunt);
                 $historique->setDateRetour($dateRetour);
-                
+
                 $historique->setUserId($data->user_id);
                 $historique->setLivreId($data->livre_id);
                 $historique->setEmpruntId($data->emprunt_id);
 
-                
+
 
                 $historiques[] = $historique;
             }
 
             if ($historiques) {
                 return $historiques;
-            }else{
+            } else {
                 return false;
             }
 
-            
+
         } catch (\PDOException $ex) {
             echo $ex->getMessage();
-            return null ;
+            return null;
         }
     }
 
-    
 
 
 
+    /**
+     * ====================== UPDATE FONCTIONS ===========================
+     */
+
+    function updateUser(User $user)
+    {
+
+        $sql = "UPDATE `library_ws_db`.`users` SET";
+
+        try {
+            $sql .= " prenom = '" . $user->getPrenom() . "',";
+            $sql .= " nom = '" . $user->getNom() . "',";
+            $sql .= " login = '" . $user->getLogin() . "'";
 
 
-    /* 
-        public function getLastEmpruntId()
-        {
-            $sql = "SELECT id FROM `library_ws_db`.`emprunt` ORDER BY id DESC LIMIT 1";
-            
-            try {
-
-                $result = $this->connexion->prepare($sql);
-                $var = $result->execute();
+            $sql .= " WHERE id=" . $user->getId();
 
 
-                $emprunts = [];
-                while ($data = $result->fetch(PDO::FETCH_OBJ)) {
-                    //var_dump($data);
-                    # code...
-                    $emprunt = new Emprunt();
-                    $emprunt->setId($data->id+1);
-                    $emprunts[] = $emprunt;
-                }
+            $result = $this->connexion->prepare($sql);
+            $var = $result->execute();
 
-                if ($emprunts) {
-                    return $emprunts;
-                } else {
-                    return false;
-                }
-                
-
-            } catch (\PDOException $ex) {
-                echo  $ex->getMessage();
-                
-                return null;
+            if ($var) {
+                return true;
+            } else {
+                return false;
             }
-        } 
+
+
+        } catch (\PDOException $ex) {
+
+            echo $ex->getMessage();
+            return null;
+        }
+    }
+
+
+    function updateLivre(Livre $livre)
+    {
+
+        $sql = "UPDATE `library_ws_db`.`livre` SET";
+
+        try {
+            $sql .= " titre = '" . $livre->getTitre() . "',";
+            $sql .= " autheur = '" . $livre->getAutheur() . "',";
+            $sql .= " isbn = '" . $livre->getIsbn() . "',";
+            $sql .= " datePub = '" . $livre->getDatePub()->format('Y-m-d') . "',";
+            $sql .= " disponibilite = '" . (int) $livre->getDisponibilite() . "'";
+
+
+            $sql .= " WHERE id=" . $livre->getId();
+
+
+            $result = $this->connexion->prepare($sql);
+            $var = $result->execute();
+
+            if ($var) {
+                return true;
+            } else {
+                return false;
+            }
+
+
+        } catch (\PDOException $ex) {
+
+            echo $ex->getMessage();
+            return null;
+        }
+    }
+
+
+    function updateEmprunt(Emprunt $emprunt)
+    {
+
+        $sql = "UPDATE `library_ws_db`.`emprunt` SET";
+
+        try {
+            $sql .= " date_emprunt = '" . $emprunt->getDateEmprunt()->format('Y-m-d') . "',";
+            $sql .= " date_retour = '" . $emprunt->getDateRetour()->format('Y-m-d') . "',";
+            $sql .= " user_id = '" . $emprunt->getUserId() . "',";
+            $sql .= " livre_id = '" . $emprunt->getLivreId() . "'";
+
+
+            $sql .= " WHERE id=" . $emprunt->getId();
+
+
+            $result = $this->connexion->prepare($sql);
+            $var = $result->execute();
+
+            if ($var) {
+                return true;
+            } else {
+                return false;
+            }
+
+
+        } catch (\PDOException $ex) {
+
+            echo $ex->getMessage();
+            return null;
+        }
+    }
+
+    function updateHistorique(Historique $historique)
+    {
+
+        $sql = "UPDATE `library_ws_db`.`historique` SET";
+
+        try {
+            $sql .= " date_emprunt = '" . $historique->getDateEmprunt()->format('Y-m-d') . "',";
+            $sql .= " date_retour = '" . $historique->getDateRetour()->format('Y-m-d') . "',";
+            $sql .= " user_id = '" . $historique->getUserId() . "',";
+            $sql .= " livre_id = '" . $historique->getLivreId() . "'";
+
+
+            $sql .= " WHERE id=" . $historique->getId();
+
+
+            $result = $this->connexion->prepare($sql);
+
+            $var = $result->execute();
+
+            if ($var) {
+                return true;
+            } else {
+                return false;
+            }
+
+
+        } catch (\PDOException $ex) {
+
+            echo $ex->getMessage();
+            return null;
+        }
+    }
+
+
+
+    //Methode me permettant de un element de la table emprunt
+    public function getEmpruntById(int $id): ?Emprunt
+    {
+        $sql = "SELECT * FROM `library_ws_db`.`emprunt` WHERE id = ?";
+
+        try {
+            $result = $this->connexion->prepare($sql);
+            $result->execute([$id]);
+
+            if ($data = $result->fetch(PDO::FETCH_OBJ)) {
+                $emprunt = new Emprunt();
+                $emprunt->setId($data->id);
+                $emprunt->setDateEmprunt(new \DateTime($data->date_emprunt));
+                $emprunt->setDateRetour(new \DateTime($data->date_retour));
+                $emprunt->setUserId($data->user_id);
+                $emprunt->setLivreId($data->livre_id);
+
+                return $emprunt;
+            }
+
+            return null;
+        } catch (\PDOException $ex) {
+            throw new \Exception("Erreur lors de la récupération de l'emprunt : " . $ex->getMessage());
+        }
+    }
+
+
+    public function getHistoriqueByEmpruntId(int $empruntId): ?Historique
+    {
+        $sql = "SELECT * FROM `library_ws_db`.`historique` WHERE emprunt_id = ?";
+
+        try {
+            $result = $this->connexion->prepare($sql);
+            $result->execute([$empruntId]);
+
+            if ($data = $result->fetch(PDO::FETCH_OBJ)) {
+                $historique = new Historique();
+                $historique->setId($data->id);
+                $historique->setDateEmprunt(new \DateTime($data->date_emprunt));
+                $historique->setDateRetour(new \DateTime($data->date_retour));
+                $historique->setUserId($data->user_id);
+                $historique->setLivreId($data->livre_id);
+                $historique->setEmpruntId($data->emprunt_id);
+
+                return $historique;
+            }
+
+            return null;
+        } catch (\PDOException $ex) {
+            throw new \Exception("Erreur lors de la récupération de l'historique : " . $ex->getMessage());
+        }
+    }
+
+    /**
+     * =============================> DYNAMISER LA FONCTION DETAIL =============================> 
+     */
+
+    /*  public function getObjectById(string $className, int $id): ?object
+        {
+            $tableName = $this->getTableNameFromClassName($className);
+            $sql = "SELECT * FROM `library_ws_db`.`$tableName` WHERE id = ?";
+
+            try {
+                $result = $this->connexion->prepare($sql);
+                $result->execute([$id]);
+
+                if ($data = $result->fetch(PDO::FETCH_OBJ)) {
+                    $object = new $className();
+
+                    // Remplir les propriétés de l'objet
+                    $reflectionClass = new \ReflectionClass($object);
+                    $properties = $reflectionClass->getProperties();
+                    foreach ($properties as $property) {
+                        $property->setAccessible(true);
+                        $property->setValue($object, $data->{$property->getName()});
+                    }
+
+                    return $object;
+                }
+
+                return null;
+            } catch (\PDOException $ex) {
+                throw new \Exception("Erreur lors de la récupération de l'objet : " . $ex->getMessage());
+            }
+        }
     */
 
 
+    /**
+     * Détermine le nom de la table à partir du nom de la classe.
+     */
+
+    /*  private function getTableNameFromClassName(string $className): string
+    {
+        $tableName = preg_replace('/([A-Z])/', '_$1', $className);
+        $tableName = strtolower(substr($tableName, 1));
+        return $tableName;
+    } */
+
+
+    function deleteUsers(User $user)
+    {
+        $sql = "DELETE FROM `library_ws_db`.`users` WHERE id=" . $user->getId();
+
+
+        try {
+
+
+            $result = $this->connexion->prepare($sql);
+            $var = $result->execute();
+
+
+
+        } catch (\PDOException $e) {
+            return null;
+        }
+    }
+
+    function deleteLivre(Livre $livre)
+    {
+        $sql = "DELETE FROM `library_ws_db`.`livre` WHERE id=" . $livre->getId();
+
+
+        try {
+
+
+            $result = $this->connexion->prepare($sql);
+            $var = $result->execute();
+
+
+
+        } catch (\PDOException $e) {
+            return null;
+        }
+    }
+
+
+    function deleteEmprunt(Emprunt $emprunt)
+    {
+        $sql = "DELETE FROM `library_ws_db`.`emprunt` WHERE id=" . $emprunt->getId();
+
+
+        try {
+
+
+            $result = $this->connexion->prepare($sql);
+            $var = $result->execute();
+
+
+
+        } catch (\PDOException $e) {
+            return null;
+        }
+    }
+
+    function deleteHistorique(Historique $historique)
+    {
+        $sql = "DELETE FROM `library_ws_db`.`historique` WHERE id=" . $historique->getId();
+
+
+        try {
+
+
+            $result = $this->connexion->prepare($sql);
+            $var = $result->execute();
+
+
+
+        } catch (\PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
+
+    
 
 
 
