@@ -535,106 +535,9 @@ class Datalayer
     }
 
 
-
-    //Methode me permettant de un element de la table emprunt
-    public function getEmpruntById(int $id): ?Emprunt
-    {
-        $sql = "SELECT * FROM `library_ws_db`.`emprunt` WHERE id = ?";
-
-        try {
-            $result = $this->connexion->prepare($sql);
-            $result->execute([$id]);
-
-            if ($data = $result->fetch(PDO::FETCH_OBJ)) {
-                $emprunt = new Emprunt();
-                $emprunt->setId($data->id);
-                $emprunt->setDateEmprunt(new \DateTime($data->date_emprunt));
-                $emprunt->setDateRetour(new \DateTime($data->date_retour));
-                $emprunt->setUserId($data->user_id);
-                $emprunt->setLivreId($data->livre_id);
-
-                return $emprunt;
-            }
-
-            return null;
-        } catch (\PDOException $ex) {
-            throw new \Exception("Erreur lors de la récupération de l'emprunt : " . $ex->getMessage());
-        }
-    }
-
-
-    public function getHistoriqueByEmpruntId(int $empruntId): ?Historique
-    {
-        $sql = "SELECT * FROM `library_ws_db`.`historique` WHERE emprunt_id = ?";
-
-        try {
-            $result = $this->connexion->prepare($sql);
-            $result->execute([$empruntId]);
-
-            if ($data = $result->fetch(PDO::FETCH_OBJ)) {
-                $historique = new Historique();
-                $historique->setId($data->id);
-                $historique->setDateEmprunt(new \DateTime($data->date_emprunt));
-                $historique->setDateRetour(new \DateTime($data->date_retour));
-                $historique->setUserId($data->user_id);
-                $historique->setLivreId($data->livre_id);
-                $historique->setEmpruntId($data->emprunt_id);
-
-                return $historique;
-            }
-
-            return null;
-        } catch (\PDOException $ex) {
-            throw new \Exception("Erreur lors de la récupération de l'historique : " . $ex->getMessage());
-        }
-    }
-
     /**
-     * =============================> DYNAMISER LA FONCTION DETAIL =============================> 
-     */
-
-    /*  public function getObjectById(string $className, int $id): ?object
-        {
-            $tableName = $this->getTableNameFromClassName($className);
-            $sql = "SELECT * FROM `library_ws_db`.`$tableName` WHERE id = ?";
-
-            try {
-                $result = $this->connexion->prepare($sql);
-                $result->execute([$id]);
-
-                if ($data = $result->fetch(PDO::FETCH_OBJ)) {
-                    $object = new $className();
-
-                    // Remplir les propriétés de l'objet
-                    $reflectionClass = new \ReflectionClass($object);
-                    $properties = $reflectionClass->getProperties();
-                    foreach ($properties as $property) {
-                        $property->setAccessible(true);
-                        $property->setValue($object, $data->{$property->getName()});
-                    }
-
-                    return $object;
-                }
-
-                return null;
-            } catch (\PDOException $ex) {
-                throw new \Exception("Erreur lors de la récupération de l'objet : " . $ex->getMessage());
-            }
-        }
+     * ====================== DELETE FONCTIONS ===========================
     */
-
-
-    /**
-     * Détermine le nom de la table à partir du nom de la classe.
-     */
-
-    /*  private function getTableNameFromClassName(string $className): string
-    {
-        $tableName = preg_replace('/([A-Z])/', '_$1', $className);
-        $tableName = strtolower(substr($tableName, 1));
-        return $tableName;
-    } */
-
 
     function deleteUsers(User $user)
     {
@@ -708,6 +611,152 @@ class Datalayer
             return $e->getMessage();
         }
     }
+
+
+
+
+    /**
+     * =============================> DYNAMISER LA FONCTION DETAIL =============================> 
+    */
+
+    //Methode me permettant de un element de la table emprunt
+    public function getEmpruntById(int $id): ?Emprunt
+    {
+        $sql = "SELECT * FROM `library_ws_db`.`emprunt` WHERE id = ?";
+
+        try {
+            $result = $this->connexion->prepare($sql);
+            $result->execute([$id]);
+
+            if ($data = $result->fetch(PDO::FETCH_OBJ)) {
+                $emprunt = new Emprunt();
+                $emprunt->setId($data->id);
+                $emprunt->setDateEmprunt(new \DateTime($data->date_emprunt));
+                $emprunt->setDateRetour(new \DateTime($data->date_retour));
+                $emprunt->setUserId($data->user_id);
+                $emprunt->setLivreId($data->livre_id);
+
+                return $emprunt;
+            }
+
+            return null;
+        } catch (\PDOException $ex) {
+            throw new \Exception("Erreur lors de la récupération de l'emprunt : " . $ex->getMessage());
+        }
+    }
+
+
+    public function getHistoriqueById(int $id): ?Historique
+    {
+        $sql = "SELECT * FROM `library_ws_db`.`historique` WHERE id = ?";
+
+        try {
+            $result = $this->connexion->prepare($sql);
+            $result->execute([$id]);
+
+            if ($data = $result->fetch(PDO::FETCH_OBJ)) {
+                $historique = new Historique();
+                $historique->setId($data->id);
+                $historique->setDateEmprunt(new \DateTime($data->date_emprunt));
+                $historique->setDateRetour(new \DateTime($data->date_retour));
+                $historique->setUserId($data->user_id);
+                $historique->setLivreId($data->livre_id);
+                $historique->setEmpruntId($data->emprunt_id);
+
+                return $historique;
+            }
+
+            return null;
+        } catch (\PDOException $ex) {
+            throw new \Exception("Erreur lors de la récupération de l'emprunt : " . $ex->getMessage());
+        }
+    }
+
+
+    public function getLivreById(int $id): ?Livre
+    {
+        $sql = "SELECT * FROM `library_ws_db`.`livre` WHERE id = ?";
+
+        try {
+            $result = $this->connexion->prepare($sql);
+            $result->execute([$id]);
+
+            if ($data = $result->fetch(PDO::FETCH_OBJ)) {
+                $livre = new Livre();
+                $livre->setId($data->id);
+                $livre->setTitre($data->titre);
+                $livre->setAutheur($data->autheur);
+                $livre->setIsbn($data->isbn);
+                $livre->setDatePub(new DateTime($data->datePub));
+                $livre->setDisponibilite($data->datePub);
+
+                return $livre;
+            }
+
+            return null;
+        } catch (\PDOException $ex) {
+            throw new \Exception("Erreur lors de la récupération de l'emprunt : " . $ex->getMessage());
+        }
+    }
+
+    
+    public function getUserById(int $id): ?User
+    {
+        $sql = "SELECT * FROM `library_ws_db`.`users` WHERE id = ?";
+
+        try {
+            $result = $this->connexion->prepare($sql);
+            $result->execute([$id]);
+
+            if ($data = $result->fetch(PDO::FETCH_OBJ)) {
+                $user = new User();
+                $user->setId($data->id);
+                $user->setPrenom($data->prenom);
+                $user->setNom($data->nom);
+                $user->setLogin($data->login);
+
+                return $user;
+            }
+
+            return null;
+        } catch (\PDOException $ex) {
+            throw new \Exception("Erreur lors de la récupération de l'emprunt : " . $ex->getMessage());
+        }
+    }
+
+
+
+
+
+    public function getHistoriqueByEmpruntId(int $empruntId): ?Historique
+    {
+        $sql = "SELECT * FROM `library_ws_db`.`historique` WHERE emprunt_id = ?";
+
+        try {
+            $result = $this->connexion->prepare($sql);
+            $result->execute([$empruntId]);
+
+            if ($data = $result->fetch(PDO::FETCH_OBJ)) {
+                $historique = new Historique();
+                $historique->setId($data->id);
+                $historique->setDateEmprunt(new \DateTime($data->date_emprunt));
+                $historique->setDateRetour(new \DateTime($data->date_retour));
+                $historique->setUserId($data->user_id);
+                $historique->setLivreId($data->livre_id);
+                $historique->setEmpruntId($data->emprunt_id);
+
+                return $historique;
+            }
+
+            return null;
+        } catch (\PDOException $ex) {
+            throw new \Exception("Erreur lors de la récupération de l'historique : " . $ex->getMessage());
+        }
+    }
+
+   
+
+
 
 
 
