@@ -25,6 +25,53 @@ class Datalayer
      * ================== CREATE ENTITY FUNCTION ====================
      */
 
+
+    /**
+     * Methode permettant d'authentifier un utilisateur
+     * @param //UserEntity $user Objet metier decrivant un utilisateur
+     * @return //UserEntity $user Objet métier décrivant l'utilisateur authentifié
+     * @return //FALSE En cas d'échec d'authentification
+     * @return //NULL Exception déclanchée
+     */
+    function authentifier(User $user)
+    {
+        $sql = "SELECT * FROM `library_ws_db`.`users` WHERE login= :login";
+
+
+        try {
+            $result = $this->connexion->prepare($sql);
+            $var = $result->execute(
+                array(
+                    ':login' => $user->getLogin()
+                )
+            );
+
+
+            //On recupère les données de l'utilisateur
+            $data = $result->fetch(PDO::FETCH_OBJ);
+
+
+            //tester si les données sont recuperées et verifier la conformité des mots de passe (renseigné et celui haché)
+            if ($data && ($data->password == sha1($user->getPassword()))) {
+                //authentification reussie: mise à jour des données
+                $user->setId($data->id);
+                $user->setPrenom($data->prenom);
+                $user->setNom($data->nom);
+                $user->setPassword(null);
+
+
+                return $user;
+            } else {
+                //authentification échouée !
+                return false;
+            }
+        } catch (\PDOException $ex) {
+            echo "Error de : " . $ex->getMessage();
+            return null;
+        }
+    }
+
+
     public function creatUser(User $user)
     {
 
@@ -661,9 +708,6 @@ class Datalayer
             return $e->getMessage();
         }
     }
-
-
-    
 
 
 

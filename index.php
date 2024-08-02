@@ -187,7 +187,18 @@ $emprunt->setLivreId(1); */
     //  var_dump($delHist);
     
 
+    /**
+     * ===============> AUTHENTIFIER OBJECT <======================
+     */
 
+
+     $user = new User();
+     $user->setLogin("fama@gmail.com");
+     $user->setPassword("passer");
+
+     $auth = $db->authentifier($user);
+
+     var_dump($auth);
 
 
  
