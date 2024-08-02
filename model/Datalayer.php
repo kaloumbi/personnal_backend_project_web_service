@@ -11,11 +11,11 @@ class Datalayer
         try {
             $this->connexion = new PDO($var, DB_USER, DB_PASSWORD);
 
-            echo "Connexion reussie !";
+            //echo "Connexion reussie !";
         } catch (\PDOException $ex) {
             //throw $th;
 
-            echo "Connexion echoué avec ce message ==> ";
+            //echo "Connexion echoué avec ce message ==> ";
         }
     }
 

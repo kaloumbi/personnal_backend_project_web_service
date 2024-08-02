@@ -192,13 +192,23 @@ $emprunt->setLivreId(1); */
      */
 
 
-     $user = new User();
+     /* $user = new User();
      $user->setLogin("fama@gmail.com");
      $user->setPassword("passer");
 
      $auth = $db->authentifier($user);
 
-     var_dump($auth);
+     var_dump($auth); */
+
+
+
+
+
+
+
+
+
+     
 
 
  
