@@ -5,11 +5,18 @@
 
 
    //tester si le nom n'est pas defini
-   if (!isset($_REQUEST['date_emprunt']) || empty($_REQUEST['date_retour']) || empty($_REQUEST['user_id']) || empty($_REQUEST['livre_id']) ) {
+   if (!isset($_REQUEST['date_emprunt']) || !isset($_REQUEST['date_retour']) || !isset($_REQUEST['user_id']) || !isset($_REQUEST['livre_id']) ) {
        // var_dump("od");
        produceErrorRequest();
        return;
    }
+
+   //tester si le nom n'est pas defini
+   if (empty($_REQUEST['date_emprunt']) || empty($_REQUEST['date_retour']) || empty($_REQUEST['user_id']) || empty($_REQUEST['livre_id']) ) {
+        // var_dump("od");
+        produceErrorRequest();
+        return;
+    }
 
 
    try {

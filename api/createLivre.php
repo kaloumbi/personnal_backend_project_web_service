@@ -5,7 +5,7 @@
 
 
    //tester si le nom n'est pas defini
-   if (!isset($_REQUEST['titre']) || empty($_REQUEST['autheur']) || empty($_REQUEST['isbn']) || empty($_REQUEST['datePub']) || empty($_REQUEST['disponibilite']) ) {
+   if (!isset($_REQUEST['titre']) || !isset($_REQUEST['autheur']) || !isset($_REQUEST['isbn']) || empty($_REQUEST['datePub']) || empty($_REQUEST['disponibilite']) ) {
        // var_dump("od");
        produceErrorRequest();
        return;
