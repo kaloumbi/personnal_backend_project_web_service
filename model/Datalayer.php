@@ -109,7 +109,7 @@ class Datalayer
         $sql = "INSERT INTO `library_ws_db`.`livre`(`titre`, `autheur`, `isbn`, `datePub`, `disponibilite`)
                                 VALUES (:titre, :autheur, :isbn, :datePub, :disponibilite)";
 
-        var_dump($sql);
+        // var_dump($sql);
         $datePub = new DateTime();
         try {
             $result = $this->connexion->prepare($sql);
@@ -158,7 +158,7 @@ class Datalayer
                 )
             );
 
-            var_dump($emprunt);
+            // var_dump($emprunt);
             if ($data) {
                 return $data;
             } else {
@@ -173,7 +173,7 @@ class Datalayer
     }
 
 
-    //Methode me permettant de recuperer le dernier id de l'emprunt
+    //Methode me permettant de recuperer le dernier id de l'emprunt c-a-d l'objet qui vient de s'ajouter
     public function getLastEmpruntId(): ?int
     {
         $sql = "SELECT id FROM `library_ws_db`.`emprunt` ORDER BY id DESC LIMIT 1";
