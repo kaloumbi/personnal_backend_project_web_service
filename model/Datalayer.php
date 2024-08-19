@@ -292,6 +292,7 @@ class Datalayer
                 $datePub = new DateTime($data->datePub);
                 $livre->setDatePub($datePub);
                 $livre->setDisponibilite($data->disponibilite);
+                $livre->setCreatedAt(new DateTime($data->created_at));
 
                 $livres[] = $livre;
             }
