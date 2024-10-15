@@ -16,14 +16,15 @@
 
    try {
        $result = $db->deleteLivre($livre);
-      
+        //var_dump($result);
+
        if ($result) {
-           produceResult("Suppression reussie !");
+            produceResult("Suppression reussie !");
        }else{
-           produceError("Echec de la suppression. Merci de réessayer ! Verifie l'existence de l'id");
+           produceError( "Echec de la suppression. Merci de réessayer ! Verifie l'existence de l'id");
        }
       
-   } catch (\Exception $ex) {
-       produceError($ex->getMessage());
-       return null;
-   }
+    } catch (\Exception $ex) {
+        produceError($ex->getMessage());
+        return null;
+    }

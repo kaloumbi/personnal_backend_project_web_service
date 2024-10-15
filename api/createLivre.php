@@ -24,7 +24,7 @@
        $result = $db->creatLivre($livre);
       
        if ($result) {
-           produceResult("Cetegory cree avec succès!");
+           produceResult("Livre cree avec succès!");
        }else{
            produceError("Echec de creation de la category");
        }

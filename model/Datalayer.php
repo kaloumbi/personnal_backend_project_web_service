@@ -568,8 +568,11 @@ class Datalayer
 
             $result = $this->connexion->prepare($sql);
             $var = $result->execute();
-
-
+            if ($var) {
+                return true;
+            } else {
+                return false;
+            }
 
         } catch (\PDOException $e) {
             return null;
